@@ -12,7 +12,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sitecore.Support</RootNamespace>
-    <AssemblyName>Sitecore.Support.247244</AssemblyName>
+    <AssemblyName>Sitecore.Support.247244.Diag</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -73,7 +73,9 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OpenGraphMetadataRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SeoMetadataRepository.cs" />
     <Compile Include="SupportTwitterMetadata.cs" />
   </ItemGroup>
   <ItemGroup>

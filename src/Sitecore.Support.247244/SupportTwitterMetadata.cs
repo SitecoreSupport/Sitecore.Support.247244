@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sitecore.Data;
 using Sitecore.Data.Fields;
 using Sitecore.DependencyInjection;
+using Sitecore.Diagnostics;
 using Sitecore.XA.Feature.SiteMetadata.Extensions;
 using Sitecore.XA.Feature.SiteMetadata.Models;
 using Sitecore.XA.Foundation.SitecoreExtensions.Interfaces;
@@ -19,6 +20,24 @@ namespace Sitecore.Support.XA.Feature.SiteMetadata.Repositories.TwitterMetadata
     {
       //fix 247244
       PageContext = ServiceLocator.ServiceProvider.GetService<IPageContext>();
+    }
+
+    protected override IEnumerable<MetaTagModel> GetMetaTags()
+    {
+      List<MetaTagModel> list = base.BuildModelMapping().ToList();
+      list.Add(new MetaTagModel
+      {
+        Property = "twitter:title",
+        Content = this.GetTitle(PageContext.Current)
+      });
+      list.Add(new MetaTagModel
+      {
+        Property = "twitter:card",
+        Content = this.GetCardType(PageContext.Current)
+      });
+      return from metaTagModel in list
+        where metaTagModel != null
+        select metaTagModel;
     }
 
     protected override MetaTagModel GetMetatag(string property, ID fieldId)
