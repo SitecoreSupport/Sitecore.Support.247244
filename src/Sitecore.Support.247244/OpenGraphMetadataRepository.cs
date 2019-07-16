@@ -3,8 +3,11 @@
     using Microsoft.Extensions.DependencyInjection;
     using Sitecore.DependencyInjection;
     using Sitecore.XA.Feature.SiteMetadata.Models;
+    using Sitecore.XA.Feature.SiteMetadata.Extensions;
     using Sitecore.XA.Feature.SiteMetadata.Repositories.OpenGraphMetadata;
     using Sitecore.XA.Foundation.SitecoreExtensions.Interfaces;
+    using Sitecore.Data;
+    using Sitecore.Data.Fields;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -34,6 +37,30 @@
             return from metaTagModel in list
                 where metaTagModel != null
                 select metaTagModel;
+        }
+        protected override MetaTagModel GetMetatag(string property, ID fieldId)
+        {
+            PageContext = ServiceLocator.ServiceProvider.GetService<IPageContext>();
+            Field field = PageContext.Current.Fields[fieldId];
+            if (!string.IsNullOrEmpty(field?.Value))
+            {
+                if (FieldTypeManager.GetField(field) is ImageField)
+                {
+                    return new MetaTagModel
+                    {
+                        Id = fieldId,
+                        Property = property,
+                        Content = field.GetImageUrl()
+                    };
+                }
+                return new MetaTagModel
+                {
+                    Id = fieldId,
+                    Property = property,
+                    Content = field.Value.Replace("\r", " ").Replace("\n", " ").Replace("\t", " ")
+                };
+            }
+            return null;
         }
     }
 }
